@@ -340,7 +340,9 @@ extension ClientImgExtension on Client {
 }
 
 const _imageHeaderMagic = 0x96f3b83d;
+const _imageHeaderMagicV2 = 0x96f3b83d;
 const _imageTLVMagic = 0x6907;
+const _imageTLVMagicProtected = 0x6908;
 
 int _decodeInt(List<int> input, int offset, int length) {
   var result = 0;
@@ -400,7 +402,7 @@ class McuImageHeader {
 
   factory McuImageHeader.decode(List<int> input) {
     final magic = _decodeInt(input, 0, 4);
-    if (magic != _imageHeaderMagic) {
+    if (magic != _imageHeaderMagic && magic != _imageHeaderMagicV2) {
       throw FormatException("incorrect magic");
     }
 
@@ -427,7 +429,7 @@ class McuImageTLV {
 
   factory McuImageTLV.decode(List<int> input, int offset) {
     final magic = _decodeInt(input, offset, 2);
-    if (magic != _imageTLVMagic) {
+    if (magic != _imageTLVMagic && magic != _imageTLVMagicProtected) {
       throw FormatException("incorrect magic");
     }
 
